@@ -10,64 +10,72 @@ const ProcesoPage = () => {
     const controles = [
         {
             id: 1,
-            nombre: "Control de Presupuesto",
-            descripcion: "Seguimiento y control del presupuesto asignado vs ejecutado",
+            nombre: "Pago sin Factura",
+            descripcion: "",
             estado: "Cumpliendo",
             ultimaActualizacion: "2024-01-15",
             powerBiUrl: "https://via.placeholder.com/600x400/e2e8f0/64748b?text=Dashboard+Presupuesto",
         },
         {
             id: 2,
-            nombre: "Aprobaciones Pendientes",
-            descripcion: "Órdenes de compra pendientes de aprobación por nivel jerárquico",
+            nombre: "Proveedor no homologado",
+            descripcion: "",
             estado: "Atención",
             ultimaActualizacion: "2024-01-15",
             powerBiUrl: "https://via.placeholder.com/600x400/fef3c7/d97706?text=Dashboard+Aprobaciones",
         },
         {
             id: 3,
-            nombre: "Tiempo de Procesamiento",
-            descripcion: "Tiempo promedio desde solicitud hasta orden de compra",
+            nombre: "Pedido sin solicitud de gasto",
+            descripcion: "",
             estado: "Cumpliendo",
             ultimaActualizacion: "2024-01-14",
             powerBiUrl: "https://via.placeholder.com/600x400/dcfce7/16a34a?text=Dashboard+Tiempos",
         },
         {
             id: 4,
-            nombre: "Proveedores Activos",
-            descripcion: "Análisis de proveedores activos y su desempeño",
+            nombre: "Factura sin pedido asociado",
+            descripcion: "",
             estado: "Cumpliendo",
             ultimaActualizacion: "2024-01-14",
             powerBiUrl: "https://via.placeholder.com/600x400/dbeafe/2563eb?text=Dashboard+Proveedores",
         },
         {
             id: 5,
-            nombre: "Cumplimiento de Políticas",
-            descripcion: "Adherencia a las políticas de compras establecidas",
+            nombre: "Monto del pago mayor al monto de la factura",
+            descripcion: "",
             estado: "Crítico",
             ultimaActualizacion: "2024-01-13",
             powerBiUrl: "https://via.placeholder.com/600x400/fecaca/dc2626?text=Dashboard+Políticas",
         },
         {
             id: 6,
-            nombre: "Análisis de Costos",
-            descripcion: "Comparativo de costos y oportunidades de ahorro",
+            nombre: "Monto del pedido mayor al monto solicitado",
+            descripcion: "",
             estado: "Cumpliendo",
             ultimaActualizacion: "2024-01-13",
             powerBiUrl: "https://via.placeholder.com/600x400/e0f2fe/0284c7?text=Dashboard+Costos",
         },
         {
             id: 7,
-            nombre: "Órdenes por Categoría",
-            descripcion: "Distribución de órdenes de compra por categoría de producto",
+            nombre: "Solicitud aprobada pero sin pedido después de 15 días",
+            descripcion: "",
             estado: "Cumpliendo",
             ultimaActualizacion: "2024-01-12",
             powerBiUrl: "https://via.placeholder.com/600x400/f3e8ff/7c3aed?text=Dashboard+Categorías",
         },
         {
             id: 8,
-            nombre: "Indicadores KPI",
-            descripcion: "Dashboard consolidado de indicadores clave de desempeño",
+            nombre: "Factura emitida con proveedor no homologado",
+            descripcion: "",
+            estado: "Cumpliendo",
+            ultimaActualizacion: "2024-01-12",
+            powerBiUrl: "https://via.placeholder.com/600x400/ecfdf5/059669?text=Dashboard+KPIs",
+        },
+        {
+            id: 9,
+            nombre: "Pagos duplicados mismo monto y proveedor en el mismo mes",
+            descripcion: "",
             estado: "Cumpliendo",
             ultimaActualizacion: "2024-01-12",
             powerBiUrl: "https://via.placeholder.com/600x400/ecfdf5/059669?text=Dashboard+KPIs",
@@ -114,8 +122,8 @@ const ProcesoPage = () => {
                                 Volver
                             </Link>
                             <div>
-                                <h1 className="main-title">Proceso de Compra</h1>
-                                <p className="subtitle">Controles de Auditoría y Seguimiento</p>
+                                <h1 className="main-title">Controles </h1>
+                                <p className="subtitle">Proceso de Compra</p>
                             </div>
                         </div>
                         <div className="last-update">{controles.length} controles activos</div>
@@ -163,17 +171,7 @@ const ProcesoPage = () => {
                         </div>
                     </Card>
 
-                    <Card>
-                        <div className="stat-item">
-                            <div className="stat-icon blue">
-                                <TrendingUp size={24} />
-                            </div>
-                            <div className="stat-content">
-                                <p className="stat-label">Eficiencia</p>
-                                <p className="stat-value">87%</p>
-                            </div>
-                        </div>
-                    </Card>
+
                 </div>
 
                 {/* Controls Grid */}
