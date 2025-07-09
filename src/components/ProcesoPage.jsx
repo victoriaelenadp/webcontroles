@@ -211,6 +211,52 @@ const ProcesoPage = () => {
                         </Card>
                     ))}
                 </div>
+
+                {/* Exportar Datos a Excel */}
+                <div className="mt-10 bg-white shadow-md rounded-lg p-6">
+                    <h2 className="text-xl font-semibold mb-4">Exportar datos a Excel</h2>
+
+                    <form
+                        onSubmit={async (e) => {
+                            e.preventDefault();
+                            const form = new FormData(e.target);
+                            const selectedTables = form.getAll("tables");
+                            if (selectedTables.length === 0) return alert("Selecciona al menos una tabla.");
+
+                            const response = await fetch("http://localhost:8000/export_excel", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ tables: selectedTables }),
+                            });
+
+                            if (!response.ok) {
+                                return alert("Error al generar el Excel.");
+                            }
+
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const link = document.createElement("a");
+                            link.href = url;
+                            link.download = "datos_auditoria.xlsx";
+                            link.click();
+                            window.URL.revokeObjectURL(url);
+                        }}
+                    >
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                            {["resultados_control1", "pedidos", "facturas", "pagos", "proveedores", "control_pago_sin_factura", "control_monto_pago_vs_factura"].map((table) => (
+                                <label key={table} className="flex items-center space-x-2">
+                                    <input type="checkbox" name="tables" value={table} className="form-checkbox" />
+                                    <span className="capitalize">{table.replaceAll("_", " ")}</span>
+                                </label>
+                            ))}
+                        </div>
+
+                        <button type="submit" className="btn-primary">
+                            Descargar Excel
+                        </button>
+                    </form>
+                </div>
+
             </main>
         </div>
     )
