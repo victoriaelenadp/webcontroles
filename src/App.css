@@ -36,6 +36,7 @@ body {
   overflow-x: hidden;
 }
 
+
 .container {
   width: 100%;
   max-width: min(1200px, 95vw);
@@ -90,6 +91,32 @@ body {
   color: #6b7280;
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+
+/* Header Stats */
+.header-stats {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+
+.header-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  background-color: #f8fafc;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  border: 1px solid #e2e8f0;
+}
+
+.header-stat svg {
+  color: #2563eb;
 }
 
 /* Main Content */
@@ -388,6 +415,181 @@ body {
   background-color: #fecaca;
   color: #991b1b;
 }
+
+/* Controls List - Arreglar padding y espaciado */
+.controls-list-card {
+  margin-top: 2rem;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.controls-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.control-list-item {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.control-list-item:hover {
+  background-color: #f8fafc;
+}
+
+.control-list-item.border-bottom {
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 0;
+}
+
+.control-list-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.control-list-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.control-list-title {
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.control-list-description {
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+}
+
+.control-list-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.control-list-badges {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  align-items: flex-start;
+}
+
+.control-action-required {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fffbeb;
+  border: 1px solid #fed7aa;
+  border-radius: 0.5rem;
+  color: #92400e;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.control-list-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+/* Control Detail */
+.control-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.control-detail-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.powerbi-detail-card {
+  height: fit-content;
+}
+
+.powerbi-detail-container {
+  background-color: #f1f5f9;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.powerbi-detail-image {
+  width: 100%;
+  height: auto;
+  min-height: 400px;
+  max-height: 600px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.control-info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.control-info-card,
+.control-description-card {
+  height: fit-content;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #374151;
+  min-width: 120px;
+}
+
+.action-required {
+  display: flex;
+  align-items: center;
+  color: #d97706;
+  font-weight: 500;
+}
+
+.control-detail-description {
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* Responsive para control detail */
+@media (max-width: 1024px) {
+  .control-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .control-info-panel {
+    order: -1;
+  }
+}
+
 
 /* Buttons */
 .btn-primary {
@@ -1463,5 +1665,105 @@ body {
 @media (min-width: 769px) and (max-width: 1023px) {
   .export-tables-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+.powerbi-detail-card {
+  height: fit-content;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.powerbi-detail-container {
+  background-color: #f1f5f9;
+  border-radius: 0.5rem;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  margin-top: 1rem;
+}
+
+.powerbi-detail-image {
+  width: 100%;
+  height: auto;
+  min-height: 400px;
+  max-height: 600px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.control-info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.control-info-card,
+.control-description-card {
+  height: fit-content;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: clamp(0.75rem, 2vw, 1rem) 0;
+  border-bottom: 1px solid #f3f4f6;
+  gap: 1rem;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.info-row:first-child {
+  padding-top: 0;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #374151;
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+.action-required {
+  display: flex;
+  align-items: center;
+  color: #d97706;
+  font-weight: 500;
+  background-color: #fffbeb;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #fed7aa;
+  margin-top: 0.5rem;
+}
+
+.control-detail-description {
+  color: #6b7280;
+  line-height: 1.6;
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  margin-top: 1rem;
+}
+
+/* Responsive para control detail */
+@media (max-width: 1024px) {
+  .control-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .control-info-panel {
+    order: -1;
+  }
+
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .info-label {
+    min-width: auto;
   }
 }

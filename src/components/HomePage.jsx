@@ -1,48 +1,15 @@
 import { Link } from "react-router-dom"
-import { ShoppingCart, FileText, Users, Settings } from "lucide-react"
+import { ShoppingCart, FileText, Users, Settings, BookAlert } from "lucide-react"
 import Card from "./ui/Card"
 import Badge from "./ui/Badge"
 
+import { obtenerProcesosConEstadisticas, calcularEstadisticasGenerales } from "../utils/estadisticas"
+
 
 const HomePage = () => {
-    const procesos = [
-        {
-            id: "compra",
-            titulo: "Proceso de Compra",
-            descripcion: " ",
-            icono: ShoppingCart,
-            estado: "Activo",
-            controles: 9,
-            color: "blue",
-        },
-        {
-            id: "ventas",
-            titulo: "Proceso -",
-            descripcion: " ",
-            icono: FileText,
-            estado: "Próximamente",
-            controles: 0,
-            color: "green",
-        },
-        {
-            id: "rrhh",
-            titulo: "Proceso -",
-            descripcion: " ",
-            icono: Users,
-            estado: "Próximamente",
-            controles: 0,
-            color: "purple",
-        },
-        {
-            id: "operaciones",
-            titulo: "Proceso",
-            descripcion: " ",
-            icono: Settings,
-            estado: "Próximamente",
-            controles: 0,
-            color: "orange",
-        },
-    ]
+    const procesos = obtenerProcesosConEstadisticas()
+    const estadisticas = calcularEstadisticasGenerales()
+
 
     return (
         <div className="min-h-screen bg-gradient">
@@ -52,7 +19,21 @@ const HomePage = () => {
                     <div className="header-content">
                         <div>
                             <h1 className="main-title">Procesos</h1>
-                            <p className="subtitle">Sistema de Monitorización Contínua</p>
+                            <p className="subtitle">Sistema de Monitarización Contínua</p>
+                            <div className="header-stats">
+                                <div className="header-stat">
+                                    <FileText size={16} />
+                                    <span>{estadisticas.totalProcesos} Procesos</span>
+                                </div>
+                                <div className="header-stat">
+                                    <Settings size={16} />
+                                    <span>{estadisticas.procesosActivos} Activos</span>
+                                </div>
+                                <div className="header-stat">
+                                    <BookAlert size={16} />
+                                    <span>{estadisticas.totalControles} Controles</span>
+                                </div>
+                            </div>
                         </div>
                         <div className="last-update">Última actualización: {new Date().toLocaleDateString("es-ES")}</div>
                     </div>
@@ -61,45 +42,6 @@ const HomePage = () => {
 
             {/* Main Content */}
             <main className="container main-content">
-                {/* Stats Overview */}
-                <div className="stats-grid">
-                    <Card>
-                        <div className="stat-item">
-                            <div className="stat-icon blue">
-                                <FileText size={24} />
-                            </div>
-                            <div className="stat-content">
-                                <p className="stat-label">Total Procesos</p>
-                                <p className="stat-value">4</p>
-                            </div>
-                        </div>
-                    </Card>
-
-                    <Card>
-                        <div className="stat-item">
-                            <div className="stat-icon green">
-                                <Settings size={24} />
-                            </div>
-                            <div className="stat-content">
-                                <p className="stat-label">Procesos Activos</p>
-                                <p className="stat-value">1</p>
-                            </div>
-                        </div>
-                    </Card>
-
-                    <Card>
-                        <div className="stat-item">
-                            <div className="stat-icon purple">
-                                <ShoppingCart size={24} />
-                            </div>
-                            <div className="stat-content">
-                                <p className="stat-label">Controles Totales</p>
-                                <p className="stat-value">9</p>
-                            </div>
-                        </div>
-                    </Card>
-                </div>
-
                 {/* Processes Grid */}
                 <div className="processes-grid">
                     {procesos.map((proceso) => {
@@ -140,11 +82,8 @@ const HomePage = () => {
                         )
                     })}
                 </div>
-                {/* Database Export Section */}
-
             </main>
         </div>
     )
 }
-
 export default HomePage
