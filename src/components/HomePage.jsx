@@ -9,16 +9,16 @@ const HomePage = () => {
         {
             id: "compra",
             titulo: "Proceso de Compra",
-            descripcion: "Gestión completa del proceso de adquisiciones y compras corporativas",
+            descripcion: " ",
             icono: ShoppingCart,
             estado: "Activo",
-            controles: 8,
+            controles: 9,
             color: "blue",
         },
         {
             id: "ventas",
-            titulo: "Proceso de Ventas",
-            descripcion: "Control y seguimiento del proceso comercial y ventas",
+            titulo: "Proceso -",
+            descripcion: " ",
             icono: FileText,
             estado: "Próximamente",
             controles: 0,
@@ -26,8 +26,8 @@ const HomePage = () => {
         },
         {
             id: "rrhh",
-            titulo: "Recursos Humanos",
-            descripcion: "Gestión de personal y procesos administrativos de RRHH",
+            titulo: "Proceso -",
+            descripcion: " ",
             icono: Users,
             estado: "Próximamente",
             controles: 0,
@@ -35,8 +35,8 @@ const HomePage = () => {
         },
         {
             id: "operaciones",
-            titulo: "Operaciones",
-            descripcion: "Control de procesos operativos y de producción",
+            titulo: "Proceso",
+            descripcion: " ",
             icono: Settings,
             estado: "Próximamente",
             controles: 0,
@@ -51,8 +51,8 @@ const HomePage = () => {
                 <div className="container">
                     <div className="header-content">
                         <div>
-                            <h1 className="main-title">Procesos Corporativos</h1>
-                            <p className="subtitle">Sistema de Control y Auditoría</p>
+                            <h1 className="main-title">Procesos</h1>
+                            <p className="subtitle">Sistema de Monitorización Contínua</p>
                         </div>
                         <div className="last-update">Última actualización: {new Date().toLocaleDateString("es-ES")}</div>
                     </div>
@@ -94,7 +94,7 @@ const HomePage = () => {
                             </div>
                             <div className="stat-content">
                                 <p className="stat-label">Controles Totales</p>
-                                <p className="stat-value">8</p>
+                                <p className="stat-value">9</p>
                             </div>
                         </div>
                     </Card>
@@ -128,7 +128,7 @@ const HomePage = () => {
 
                                     {isActive ? (
                                         <Link to={`/proceso/${proceso.id}`} className="btn-primary">
-                                            Ver Controles de Auditoría
+                                            Ver Detalle
                                         </Link>
                                     ) : (
                                         <button disabled className="btn-disabled">

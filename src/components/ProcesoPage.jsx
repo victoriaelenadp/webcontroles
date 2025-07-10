@@ -1,8 +1,15 @@
 "use client"
 import { Link, useParams } from "react-router-dom"
-import { ArrowLeft, BarChart3, CheckCircle, AlertCircle, TrendingUp } from "lucide-react"
+import { ArrowLeft, BarChart3, CheckCircle, AlertCircle, TrendingUp, FileSpreadsheet, Download } from "lucide-react"
+
 import Card from "./ui/Card"
 import Badge from "./ui/Badge"
+import control1 from "../assets/images/control1.png";
+import control2 from "../assets/images/control2.png";
+import control5 from "../assets/images/control5.png";
+import control6 from "../assets/images/control6.png";
+import control8 from "../assets/images/control8.png";
+
 
 const ProcesoPage = () => {
     const { id } = useParams()
@@ -14,7 +21,7 @@ const ProcesoPage = () => {
             descripcion: "",
             estado: "Cumpliendo",
             ultimaActualizacion: "2024-01-15",
-            powerBiUrl: "https://via.placeholder.com/600x400/e2e8f0/64748b?text=Dashboard+Presupuesto",
+            powerBiUrl: control1,
         },
         {
             id: 2,
@@ -22,7 +29,7 @@ const ProcesoPage = () => {
             descripcion: "",
             estado: "Atención",
             ultimaActualizacion: "2024-01-15",
-            powerBiUrl: "https://via.placeholder.com/600x400/fef3c7/d97706?text=Dashboard+Aprobaciones",
+            powerBiUrl: control2,
         },
         {
             id: 3,
@@ -30,7 +37,7 @@ const ProcesoPage = () => {
             descripcion: "",
             estado: "Cumpliendo",
             ultimaActualizacion: "2024-01-14",
-            powerBiUrl: "https://via.placeholder.com/600x400/dcfce7/16a34a?text=Dashboard+Tiempos",
+            powerBiUrl: control8,
         },
         {
             id: 4,
@@ -38,7 +45,7 @@ const ProcesoPage = () => {
             descripcion: "",
             estado: "Cumpliendo",
             ultimaActualizacion: "2024-01-14",
-            powerBiUrl: "https://via.placeholder.com/600x400/dbeafe/2563eb?text=Dashboard+Proveedores",
+            powerBiUrl: control1,
         },
         {
             id: 5,
@@ -46,7 +53,7 @@ const ProcesoPage = () => {
             descripcion: "",
             estado: "Crítico",
             ultimaActualizacion: "2024-01-13",
-            powerBiUrl: "https://via.placeholder.com/600x400/fecaca/dc2626?text=Dashboard+Políticas",
+            powerBiUrl: control5,
         },
         {
             id: 6,
@@ -54,7 +61,7 @@ const ProcesoPage = () => {
             descripcion: "",
             estado: "Cumpliendo",
             ultimaActualizacion: "2024-01-13",
-            powerBiUrl: "https://via.placeholder.com/600x400/e0f2fe/0284c7?text=Dashboard+Costos",
+            powerBiUrl: control6,
         },
         {
             id: 7,
@@ -70,7 +77,7 @@ const ProcesoPage = () => {
             descripcion: "",
             estado: "Cumpliendo",
             ultimaActualizacion: "2024-01-12",
-            powerBiUrl: "https://via.placeholder.com/600x400/ecfdf5/059669?text=Dashboard+KPIs",
+            powerBiUrl: control8,
         },
         {
             id: 9,
@@ -195,11 +202,14 @@ const ProcesoPage = () => {
                                 {/* Power BI Placeholder */}
                                 <div className="powerbi-container">
                                     <img
-                                        src={control.powerBiUrl || "/placeholder.svg"}
+                                        src={control.powerBiUrl}
                                         alt={`Dashboard de ${control.nombre}`}
                                         className="powerbi-image"
+                                        onError={() => console.error(`Error cargando imagen de ${control.nombre}`)}
                                     />
+
                                 </div>
+
 
                                 <div className="control-footer">
                                     <span className="last-update-text">
@@ -213,50 +223,76 @@ const ProcesoPage = () => {
                 </div>
 
                 {/* Exportar Datos a Excel */}
-                <div className="mt-10 bg-white shadow-md rounded-lg p-6">
-                    <h2 className="text-xl font-semibold mb-4">Exportar datos a Excel</h2>
 
-                    <form
-                        onSubmit={async (e) => {
-                            e.preventDefault();
-                            const form = new FormData(e.target);
-                            const selectedTables = form.getAll("tables");
-                            if (selectedTables.length === 0) return alert("Selecciona al menos una tabla.");
 
-                            const response = await fetch("http://localhost:8000/export_excel", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ tables: selectedTables }),
-                            });
-
-                            if (!response.ok) {
-                                return alert("Error al generar el Excel.");
-                            }
-
-                            const blob = await response.blob();
-                            const url = window.URL.createObjectURL(blob);
-                            const link = document.createElement("a");
-                            link.href = url;
-                            link.download = "datos_auditoria.xlsx";
-                            link.click();
-                            window.URL.revokeObjectURL(url);
-                        }}
-                    >
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                            {["resultados_control1", "pedidos", "facturas", "pagos", "proveedores", "control_pago_sin_factura", "control_monto_pago_vs_factura"].map((table) => (
-                                <label key={table} className="flex items-center space-x-2">
-                                    <input type="checkbox" name="tables" value={table} className="form-checkbox" />
-                                    <span className="capitalize">{table.replaceAll("_", " ")}</span>
-                                </label>
-                            ))}
+                <Card className="control-card" style={{ marginTop: "2rem" }}>
+                    <div className="card-header">
+                        <div className="control-info">
+                            <div>
+                                <h3 className="control-title">
+                                    <FileSpreadsheet size={20} style={{ marginRight: "8px", color: "#2563eb" }} />
+                                    Exportar Datos a Excel
+                                </h3>
+                                <p className="control-description">
+                                    Selecciona las tablas de resultados que deseas exportar a un archivo Excel
+                                </p>
+                            </div>
+                            <Badge variant="success">
+                                <Download size={12} style={{ marginRight: "4px" }} />
+                                Disponible
+                            </Badge>
                         </div>
+                    </div>
 
-                        <button type="submit" className="btn-primary">
-                            Descargar Excel
-                        </button>
-                    </form>
-                </div>
-
+                    <div className="card-content">
+                        <form
+                            onSubmit={async (e) => {
+                                e.preventDefault()
+                                const form = new FormData(e.target)
+                                const selectedTables = form.getAll("tables")
+                                if (selectedTables.length === 0) return alert("Selecciona al menos una tabla.")
+                                const response = await fetch("http://localhost:8000/export_excel", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ tables: selectedTables }),
+                                })
+                                if (!response.ok) {
+                                    return alert("Error al generar el Excel.")
+                                }
+                                const blob = await response.blob()
+                                const url = window.URL.createObjectURL(blob)
+                                const link = document.createElement("a")
+                                link.href = url
+                                link.download = "datos_auditoria.xlsx"
+                                link.click()
+                                window.URL.revokeObjectURL(url)
+                            }}
+                        >
+                            <div className="export-tables-grid">
+                                {[
+                                    "resultados_control1",
+                                    "resultados_control2",
+                                    "resultados_control3",
+                                    "resultados_control4",
+                                    "resultados_control5",
+                                    "resultados_control6",
+                                    "resultados_control8",
+                                ].map((table) => (
+                                    <label key={table} className="table-export-checkbox">
+                                        <input type="checkbox" name="tables" value={table} />
+                                        <span className="table-export-name">
+                                            {table.replace("resultados_", "").replace("control", "Control ").replace("_", " ")}
+                                        </span>
+                                    </label>
+                                ))}
+                            </div>
+                            <button type="submit" className="btn-export-excel">
+                                <Download size={16} style={{ marginRight: "8px" }} />
+                                Descargar Excel
+                            </button>
+                        </form>
+                    </div>
+                </Card>
             </main>
         </div>
     )
