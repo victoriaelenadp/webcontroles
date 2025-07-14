@@ -59,7 +59,7 @@ const ProcesoPage = () => {
             <div className="min-h-screen bg-gradient flex items-center justify-center">
                 <Card className="p-8 flex flex-col items-center justify-center">
                     <Loader2 className="animate-spin text-blue-600" size={48} />
-                    <h2 className="text-xl font-bold text-gray-900 mt-4">Cargando proceso...</h2>
+                    <h2 className="text-xl font-bold text-gray-900 mt-4">Cargando...</h2>
                 </Card>
             </div>
         )
