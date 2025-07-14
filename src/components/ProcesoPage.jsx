@@ -11,29 +11,66 @@ import {
     Download,
     FileSpreadsheet
 } from "lucide-react"
-import { obtenerControlesPorProceso, obtenerProceso, calcularEstadisticasProceso } from "../utils/estadisticas"
 
+import { useEffect, useState } from "react"
+// ...
+import {
+    obtenerProceso
+} from "../data/procesos"; // esto sí viene de estadisticas
+
+import {
+    obtenerControlesPorProceso
+} from "../data/procesos"; // este sí está allí realmente
+
+import {
+    calcularEstadisticasProceso
+} from "../utils/estadisticas";
 import Card from "./ui/Card"
 import Badge from "./ui/Badge"
 
-
+import { Loader2 } from "lucide-react"
 
 const ProcesoPage = () => {
     const { id } = useParams()
 
-    const proceso = obtenerProceso(id)
-    const controles = obtenerControlesPorProceso(id)
-    const estadisticas = calcularEstadisticasProceso(id)
+    const [proceso, setProceso] = useState(null)
+    const [controles, setControles] = useState([])
+    const [estadisticas, setEstadisticas] = useState(null)
+    const [loading, setLoading] = useState(true)
 
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true)
+            const p = obtenerProceso(id) // síncrono
+            const c = await obtenerControlesPorProceso(id)
+            const stats = await calcularEstadisticasProceso(id)
 
-    if (!proceso) {
+            setProceso(p)
+            setControles(c || [])
+            setEstadisticas(stats)
+            setLoading(false)
+        }
+
+        fetchData()
+    }, [id])
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gradient flex items-center justify-center">
+                <Card className="p-8 flex flex-col items-center justify-center">
+                    <Loader2 className="animate-spin text-blue-600" size={48} />
+                    <h2 className="text-xl font-bold text-gray-900 mt-4">Cargando proceso...</h2>
+                </Card>
+            </div>
+        )
+    }
+
+    if (!proceso || !estadisticas) {
         return (
             <div className="min-h-screen bg-gradient flex items-center justify-center">
                 <Card className="p-8">
                     <h2 className="text-xl font-bold text-gray-900 mb-4">Proceso no encontrado</h2>
-                    <Link to="/" className="btn-primary">
-                        Volver al Inicio
-                    </Link>
+                    <Link to="/" className="btn-primary">Volver al Inicio</Link>
                 </Card>
             </div>
         )
@@ -168,6 +205,7 @@ const ProcesoPage = () => {
                     </div>
                     <div className="card-content">
                         <div className="controls-list">
+                            {console.log("IDs de controles:", controles.map(c => c.id_control))}
                             {controles.map((control, index) => (
                                 <div
                                     key={control.id}
@@ -175,7 +213,7 @@ const ProcesoPage = () => {
                                 >
                                     <div className="control-list-main">
                                         <div className="control-list-info">
-                                            <h4 className="control-list-title">{control.nombre}</h4>
+                                            <h4 className="control-list-title">{control.nombre_control}</h4>
                                             <p className="control-list-description">{control.descripcion}</p>
                                             <div className="control-list-meta">
                                                 <span className="last-update-text">
@@ -188,10 +226,10 @@ const ProcesoPage = () => {
                                             {getCriticidadBadge(control.criticidad)}
                                         </div>
                                     </div>
-                                    {control.accionRequerida && (
+                                    {control.accion_requerida && (
                                         <div className="control-action-required">
                                             <Clock size={16} style={{ marginRight: "8px", color: "#d97706" }} />
-                                            <span>{control.accionRequerida}</span>
+                                            <span>{control.accion_requerida}</span>
                                         </div>
                                     )}
                                     <div className="control-list-actions">
@@ -354,3 +392,5 @@ export default ProcesoPage
                     </div>
                 </Card>
                 */}
+
+

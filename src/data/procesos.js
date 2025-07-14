@@ -36,6 +36,42 @@ export const procesos = [
   },
 ]
 
+export const obtenerProceso = (id) => {
+  return procesos.find((p) => p.id === id);
+};
+
+
+// src/data/procesos.js
+// Esta función hace el fetch desde el backend y estructura los controles como antes
+const API_BASE_URL = "http://localhost:8000"; // Ajusta si usas otro puerto o dominio
+
+// Obtener todos los controles desde el backend
+export const obtenerTodosLosControles = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/controles`);
+    if (!response.ok) throw new Error("Error al obtener controles");
+    return await response.json();
+  } catch (error) {
+    console.error("Error en obtenerTodosLosControles:", error);
+    return [];
+  }
+};
+
+// Obtener controles por proceso (asume que existe el campo proceso_id en DB)
+export const obtenerControlesPorProceso = async (procesoId) => {
+  const controles = await obtenerTodosLosControles();
+  return controles.filter((control) => control.proceso_id === procesoId);
+};
+
+// Obtener control específico
+export const obtenerControl = async (procesoId, controlId) => {
+  const controles = await obtenerControlesPorProceso(procesoId);
+  return controles.find((control) => control.id === parseInt(controlId));
+};
+
+
+
+/* 
 // Controles por proceso
 export const controlesPorProceso = {
  compra: [
@@ -155,3 +191,4 @@ export const controlesPorProceso = {
   estadosfinancieros: [],
   accesos: [],
 }
+*/

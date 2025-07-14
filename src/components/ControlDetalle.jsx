@@ -1,5 +1,5 @@
 "use client"
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useNavigate } from "react-router-dom"
 import {
     ArrowLeft,
     BarChart3,
@@ -7,27 +7,74 @@ import {
     AlertCircle,
     TriangleIcon as ExclamationTriangle,
     Clock,
+    Loader2,
 } from "lucide-react"
 import Card from "./ui/Card"
 import Badge from "./ui/Badge"
-import { obtenerControl, obtenerProceso } from "../utils/estadisticas"
+import { useEffect, useState } from "react"
+import { obtenerControl, obtenerProceso } from "../data/procesos"
 
 const ControlDetalle = () => {
     const { procesoId, controlId } = useParams()
+    const navigate = useNavigate()
 
-    const proceso = obtenerProceso(procesoId)
-    const control = obtenerControl(procesoId, controlId)
+    const [proceso, setProceso] = useState(null)
+    const [control, setControl] = useState(null)
+    const [loading, setLoading] = useState(true)
 
-    if (!proceso || !control) {
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true)
+            const p = obtenerProceso(procesoId) // sigue siendo síncrono
+            const c = await obtenerControl(procesoId, controlId)
+            setProceso(p)
+            setControl(c)
+            setLoading(false)
+        }
+        fetchData()
+    }, [procesoId, controlId])
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gradient flex items-center justify-center">
+                <Card className="p-8 flex flex-col items-center justify-center">
+                    <Loader2 className="animate-spin text-blue-600" size={48} />
+                    <h2 className="text-xl font-bold text-gray-900 mt-4">Cargando...</h2>
+                </Card>
+            </div>
+        )
+    }
+
+    if (!proceso) {
         return (
             <div className="min-h-screen bg-gradient flex items-center justify-center">
                 <Card className="p-8">
                     <h2 className="text-xl font-bold text-gray-900 mb-4">
-                        {!proceso ? "Proceso no encontrado" : "Control no encontrado"}
+                        Proceso no encontrado
                     </h2>
-                    <Link to={procesoId ? `/proceso/${procesoId}` : "/"} className="btn-primary">
-                        {procesoId ? "Volver" : "Volver"}
-                    </Link>
+                    <Link to="/" className="btn-primary">Volver</Link>
+                </Card>
+            </div>
+        )
+    }
+
+    if (!control) {
+        return (
+            <div className="min-h-screen bg-gradient flex items-center justify-center">
+                <Card className="p-8">
+                    <h2 className="text-xl font-bold text-gray-900 mb-4">
+                        Control no encontrado
+                    </h2>
+                    <button
+                        onClick={() => {
+                            setLoading(true)
+                            setTimeout(() => navigate(`/proceso/${procesoId}`), 500)
+                        }}
+                        className="btn-back"
+                    >
+                        <ArrowLeft size={16} />
+                        Volver
+                    </button>
                 </Card>
             </div>
         )
@@ -101,7 +148,7 @@ const ControlDetalle = () => {
                                 Volver
                             </Link>
                             <div>
-                                <h1 className="main-title">{control.nombre}</h1>
+                                <h1 className="main-title">{control.nombre_control}</h1>
                                 <p className="subtitle">{control.descripcion}</p>
                             </div>
                         </div>
@@ -129,7 +176,7 @@ const ControlDetalle = () => {
                             <div className="powerbi-detail-container">
                                 <img
                                     src={control.powerBiUrl || "/placeholder.svg"}
-                                    alt={`Dashboard de ${control.nombre}`}
+                                    alt={`Dashboard de ${control.nombre_control}`}
                                     className="powerbi-detail-image"
                                 />
                             </div>
@@ -155,12 +202,12 @@ const ControlDetalle = () => {
                                     <span className="info-label">Última Actualización:</span>
                                     <span>{new Date(control.ultimaActualizacion).toLocaleDateString("es-ES")}</span>
                                 </div>
-                                {control.accionRequerida && (
+                                {control.accion_requerida && (
                                     <div className="info-row">
                                         <span className="info-label">Acción Requerida:</span>
                                         <div className="action-required">
                                             <Clock size={16} style={{ marginRight: "8px", color: "#d97706" }} />
-                                            <span>{control.accionRequerida}</span>
+                                            <span>{control.accion_requerida}</span>
                                         </div>
                                     </div>
                                 )}
