@@ -16,11 +16,10 @@ import { useEffect, useState } from "react"
 // ...
 import {
     obtenerProceso
-} from "../data/procesos"; // esto sí viene de estadisticas
-
+} from "../data/procesos";
 import {
     obtenerControlesPorProceso
-} from "../data/procesos"; // este sí está allí realmente
+} from "../data/procesos";
 
 import {
     calcularEstadisticasProceso
@@ -37,6 +36,38 @@ const ProcesoPage = () => {
     const [controles, setControles] = useState([])
     const [estadisticas, setEstadisticas] = useState(null)
     const [loading, setLoading] = useState(true)
+
+    const tablasPorProceso = {
+        "compra": [
+            "resultados_control1",
+            "resultados_control2",
+            "resultados_control3",
+            "resultados_control4",
+            "resultados_control5",
+            "resultados_control6",
+            "resultados_control8",
+            "resultados_control9",
+        ],
+        "fraude": [
+            "resultados_control10"
+        ],
+        "estadosfinancieros": [
+
+        ],
+        "accesos": [
+            "resultados_control14"
+        ]
+    }
+
+    const getNombreControl = (tableName) => {
+        const match = tableName.match(/resultados_control(\d+)/)
+        if (!match) return tableName
+        const controlId = parseInt(match[1])
+        const control = controles.find(c => c.id_control === controlId)
+        return control ? control.nombre_control : `Control ${controlId}`
+    }
+
+    const tablasDisponibles = tablasPorProceso[id] || []
 
     useEffect(() => {
         const fetchData = async () => {
@@ -215,11 +246,7 @@ const ProcesoPage = () => {
                                         <div className="control-list-info">
                                             <h4 className="control-list-title">{control.nombre_control}</h4>
                                             <p className="control-list-description">{control.descripcion}</p>
-                                            <div className="control-list-meta">
-                                                <span className="last-update-text">
-                                                    Actualizado: {new Date(control.ultimaActualizacion).toLocaleDateString("es-ES")}
-                                                </span>
-                                            </div>
+
                                         </div>
                                         <div className="control-list-badges">
                                             {getEstadoBadge(control.estado)}
@@ -242,74 +269,75 @@ const ProcesoPage = () => {
                         </div>
                     </div>
                 </Card>
+                <Card className="controls-list-card">
 
-                <Card className="control-card" style={{ marginTop: "2rem" }}>
-                    <div className="card-header">
-                        <div className="control-info">
-                            <div>
-                                <h3 className="control-title">
-                                    <FileSpreadsheet size={20} style={{ marginRight: "8px", color: "#2563eb" }} />
-                                    Exportar Datos a Excel
-                                </h3>
-                                <p className="control-description">
-                                    Selecciona las tablas de resultados que deseas exportar a un archivo Excel
-                                </p>
+                    {/* Export Section */}
+                    <Card className="control-card" style={{ marginTop: "2rem" }}>
+                        <div className="card-header">
+                            <div className="control-info">
+                                <div>
+                                    <h3 className="control-title">
+                                        <FileSpreadsheet size={20} style={{ marginRight: "8px", color: "#2563eb" }} />
+                                        Exportar Datos a Excel
+                                    </h3>
+                                    <p className="control-description">
+                                        Selecciona las tablas de resultados que deseas exportar a un archivo Excel
+                                    </p>
+                                </div>
+                                <Badge variant="success">
+                                    <Download size={12} style={{ marginRight: "4px" }} />
+                                    Descargar Data
+                                </Badge>
                             </div>
-                            <Badge variant="success">
-                                <Download size={12} style={{ marginRight: "4px" }} />
-                                Disponible
-                            </Badge>
                         </div>
-                    </div>
 
-                    <div className="card-content">
-                        <form
-                            onSubmit={async (e) => {
-                                e.preventDefault()
-                                const form = new FormData(e.target)
-                                const selectedTables = form.getAll("tables")
-                                if (selectedTables.length === 0) return alert("Selecciona al menos una tabla.")
-                                const response = await fetch("http://localhost:8000/export_excel", {
-                                    method: "POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ tables: selectedTables }),
-                                })
-                                if (!response.ok) {
-                                    return alert("Error al generar el Excel.")
-                                }
-                                const blob = await response.blob()
-                                const url = window.URL.createObjectURL(blob)
-                                const link = document.createElement("a")
-                                link.href = url
-                                link.download = "datos_auditoria.xlsx"
-                                link.click()
-                                window.URL.revokeObjectURL(url)
-                            }}
-                        >
-                            <div className="export-tables-grid">
-                                {[
-                                    "resultados_control1",
-                                    "resultados_control2",
-                                    "resultados_control3",
-                                    "resultados_control4",
-                                    "resultados_control5",
-                                    "resultados_control6",
-                                    "resultados_control8",
-                                ].map((table) => (
-                                    <label key={table} className="table-export-checkbox">
-                                        <input type="checkbox" name="tables" value={table} />
-                                        <span className="table-export-name">
-                                            {table.replace("resultados_", "").replace("control", "Control ").replace("_", " ")}
-                                        </span>
-                                    </label>
-                                ))}
-                            </div>
-                            <button type="submit" className="btn-export-excel">
-                                <Download size={16} style={{ marginRight: "8px" }} />
-                                Descargar Excel
-                            </button>
-                        </form>
-                    </div>
+                        <div className="card-content">
+                            {tablasDisponibles.length === 0 ? (
+                                <p>No hay tablas disponibles para exportar en este proceso.</p>
+                            ) : (
+                                <form
+                                    onSubmit={async (e) => {
+                                        e.preventDefault()
+                                        const form = new FormData(e.target)
+                                        const selectedTables = form.getAll("tables")
+                                        if (selectedTables.length === 0) {
+                                            return alert("Selecciona al menos una tabla.")
+                                        }
+                                        const response = await fetch("http://localhost:8000/export_excel", {
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({ tables: selectedTables }),
+                                        })
+                                        if (!response.ok) {
+                                            return alert("Error al generar el Excel.")
+                                        }
+                                        const blob = await response.blob()
+                                        const url = window.URL.createObjectURL(blob)
+                                        const link = document.createElement("a")
+                                        link.href = url
+                                        link.download = "data.xlsx"
+                                        link.click()
+                                        window.URL.revokeObjectURL(url)
+                                    }}
+                                >
+                                    <div className="export-tables-grid">
+                                        {tablasDisponibles.map((table) => (
+                                            <label key={table} className="table-export-checkbox">
+                                                <input type="checkbox" name="tables" value={table} />
+                                                <span className="table-export-name">
+                                                    {table.replace("resultados_", "").replace("control", "Control ").replace("_", " ")}
+                                                </span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                    <button type="submit" className="btn-export-excel">
+                                        <Download size={16} style={{ marginRight: "8px" }} />
+                                        Descargar Excel
+                                    </button>
+                                </form>
+                            )}
+                        </div>
+                    </Card>
                 </Card>
 
             </main>
@@ -317,80 +345,7 @@ const ProcesoPage = () => {
     )
 }
 
+
 export default ProcesoPage
-
-
-{/* Exportar Datos a Excel */ }
-
-{/* 
-                <Card className="control-card" style={{ marginTop: "2rem" }}>
-                    <div className="card-header">
-                        <div className="control-info">
-                            <div>
-                                <h3 className="control-title">
-                                    <FileSpreadsheet size={20} style={{ marginRight: "8px", color: "#2563eb" }} />
-                                    Exportar Datos a Excel
-                                </h3>
-                                <p className="control-description">
-                                    Selecciona las tablas de resultados que deseas exportar a un archivo Excel
-                                </p>
-                            </div>
-                            <Badge variant="success">
-                                <Download size={12} style={{ marginRight: "4px" }} />
-                                Disponible
-                            </Badge>
-                        </div>
-                    </div>
-
-                    <div className="card-content">
-                        <form
-                            onSubmit={async (e) => {
-                                e.preventDefault()
-                                const form = new FormData(e.target)
-                                const selectedTables = form.getAll("tables")
-                                if (selectedTables.length === 0) return alert("Selecciona al menos una tabla.")
-                                const response = await fetch("http://localhost:8000/export_excel", {
-                                    method: "POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ tables: selectedTables }),
-                                })
-                                if (!response.ok) {
-                                    return alert("Error al generar el Excel.")
-                                }
-                                const blob = await response.blob()
-                                const url = window.URL.createObjectURL(blob)
-                                const link = document.createElement("a")
-                                link.href = url
-                                link.download = "datos_auditoria.xlsx"
-                                link.click()
-                                window.URL.revokeObjectURL(url)
-                            }}
-                        >
-                            <div className="export-tables-grid">
-                                {[
-                                    "resultados_control1",
-                                    "resultados_control2",
-                                    "resultados_control3",
-                                    "resultados_control4",
-                                    "resultados_control5",
-                                    "resultados_control6",
-                                    "resultados_control8",
-                                ].map((table) => (
-                                    <label key={table} className="table-export-checkbox">
-                                        <input type="checkbox" name="tables" value={table} />
-                                        <span className="table-export-name">
-                                            {table.replace("resultados_", "").replace("control", "Control ").replace("_", " ")}
-                                        </span>
-                                    </label>
-                                ))}
-                            </div>
-                            <button type="submit" className="btn-export-excel">
-                                <Download size={16} style={{ marginRight: "8px" }} />
-                                Descargar Excel
-                            </button>
-                        </form>
-                    </div>
-                </Card>
-                */}
 
 

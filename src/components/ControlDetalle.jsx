@@ -169,7 +169,7 @@ const ControlDetalle = () => {
                         <div className="card-header">
                             <h3 className="control-title">
                                 <BarChart3 size={20} style={{ marginRight: "8px", color: "#2563eb" }} />
-                                Dashboard Interactivo
+                                Dashboard
                             </h3>
                         </div>
                         <div className="card-content">
@@ -198,10 +198,7 @@ const ControlDetalle = () => {
                                     <span className="info-label">Criticidad:</span>
                                     {getCriticidadBadge(control.criticidad)}
                                 </div>
-                                <div className="info-row">
-                                    <span className="info-label">Última Actualización:</span>
-                                    <span>{new Date(control.ultimaActualizacion).toLocaleDateString("es-ES")}</span>
-                                </div>
+
                                 {control.accion_requerida && (
                                     <div className="info-row">
                                         <span className="info-label">Acción Requerida:</span>

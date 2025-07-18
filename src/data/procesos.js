@@ -29,7 +29,7 @@ export const procesos = [
   {
     id: "accesos",
     titulo: "Accesos",
-    descripcion: "Control de procesos operativos y de producción",
+    descripcion: " ",
     icono: Settings,
     estado: "Activo",
     color: "orange",
