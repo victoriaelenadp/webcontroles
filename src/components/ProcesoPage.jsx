@@ -9,7 +9,11 @@ import {
     TriangleIcon as ExclamationTriangle,
     Clock,
     Download,
-    FileSpreadsheet
+    FileSpreadsheet,
+    LayoutList,
+    Rows4,
+    Rows2,
+    Wrench
 } from "lucide-react"
 
 import { useEffect, useState } from "react"
@@ -36,6 +40,8 @@ const ProcesoPage = () => {
     const [controles, setControles] = useState([])
     const [estadisticas, setEstadisticas] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [vistaCompacta, setVistaCompacta] = useState(false)
+
 
     const tablasPorProceso = {
         "compra": [
@@ -226,6 +232,9 @@ const ProcesoPage = () => {
 
                 </div>
 
+
+
+
                 {/* Controls List */}
                 <Card className="controls-list-card">
                     <div className="card-header">
@@ -233,40 +242,91 @@ const ProcesoPage = () => {
                             <BarChart3 size={20} style={{ marginRight: "8px", color: "#2563eb" }} />
                             Controles ({estadisticas.totalControles})
                         </h3>
+                        <div className="view-toggle">
+                            <button
+                                className={`toggle-button ${!vistaCompacta ? "active" : ""}`}
+                                onClick={() => setVistaCompacta(false)}
+                                title="Vista detallada"
+                            >
+                                <Rows2 size={18} />
+                            </button>
+                            <button
+                                className={`toggle-button ${vistaCompacta ? "active" : ""}`}
+                                onClick={() => setVistaCompacta(true)}
+                                title="Vista compacta"
+                            >
+                                <Rows4 size={18} />
+                            </button>
+                        </div>
                     </div>
                     <div className="card-content">
                         <div className="controls-list">
-                            {console.log("IDs de controles:", controles.map(c => c.id_control))}
-                            {controles.map((control, index) => (
-                                <div
-                                    key={control.id}
-                                    className={`control-list-item ${index !== controles.length - 1 ? "border-bottom" : ""}`}
-                                >
-                                    <div className="control-list-main">
-                                        <div className="control-list-info">
-                                            <h4 className="control-list-title">{control.nombre_control}</h4>
-                                            <p className="control-list-description">{control.descripcion}</p>
+                            {controles.map((control, index) => {
+                                if (!vistaCompacta) {
+                                    // Vista detallada
+                                    return (
+                                        <div
+                                            key={control.id}
+                                            className={`control-list-item ${index !== controles.length - 1 ? "border-bottom" : ""}`}
+                                        >
+                                            <div className="control-list-main">
+                                                <div className="control-list-info">
+                                                    <h4 className="control-list-title">{control.nombre_control}</h4>
+                                                    <h2 className="control-list-description">ID: {control.id}</h2>
+                                                    <p className="control-list-description">{control.descripcion}</p>
+                                                </div>
+                                                <div className="control-list-badges">
+                                                    {getEstadoBadge(control.estado)}
+                                                    {getCriticidadBadge(control.criticidad)}
+                                                </div>
+                                            </div>
+                                            {control.accion_requerida && (
+                                                <div className="control-action-required">
+                                                    <Wrench size={16} style={{ marginRight: "8px", color: "#d97706" }} />
+                                                    <span>{control.accion_requerida}</span>
+                                                </div>
+                                            )}
+                                            <div className="control-list-actions">
+                                                <Link to={`/proceso/${id}/control/${control.id}`} className="btn-outline">
+                                                    Ver Detalle
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    )
+                                } else {
+                                    // Vista compacta
+                                    return (
+                                        <div key={control.id} className="compact-control-item">
+                                            <div>
+                                                <h4 className="compact-title">{control.nombre_control}</h4>
+                                                {/*   <h2 className="control-list-description">ID: {control.id}</h2> */}
+                                                <div className="compact-badges">
+                                                    {getEstadoBadge(control.estado)}
+                                                    {/*  
+                                                    
+                                                    {getCriticidadBadge(control.criticidad)} */}
+                                                    {control.accion_requerida && (
 
+
+                                                        <div className="control-action-required-compact">
+
+                                                            <span> Acción Requerida </span>
+                                                        </div>
+
+
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <Link to={`/proceso/${id}/control/${control.id}`} className="btn-outline small">
+                                                Ver Detalle
+                                            </Link>
                                         </div>
-                                        <div className="control-list-badges">
-                                            {getEstadoBadge(control.estado)}
-                                            {getCriticidadBadge(control.criticidad)}
-                                        </div>
-                                    </div>
-                                    {control.accion_requerida && (
-                                        <div className="control-action-required">
-                                            <Clock size={16} style={{ marginRight: "8px", color: "#d97706" }} />
-                                            <span>{control.accion_requerida}</span>
-                                        </div>
-                                    )}
-                                    <div className="control-list-actions">
-                                        <Link to={`/proceso/${id}/control/${control.id}`} className="btn-outline">
-                                            Ver Detalle
-                                        </Link>
-                                    </div>
-                                </div>
-                            ))}
+                                    )
+                                }
+                            })}
                         </div>
+
+
                     </div>
                 </Card>
                 <Card className="controls-list-card">
@@ -347,5 +407,4 @@ const ProcesoPage = () => {
 
 
 export default ProcesoPage
-
 

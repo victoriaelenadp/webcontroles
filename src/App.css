@@ -177,7 +177,12 @@ body {
 }
 
 .card-header {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
+
 }
 
 .card-content {
@@ -385,6 +390,20 @@ body {
   white-space: nowrap;
 }
 
+.badge-compact {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.3rem;
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+
 .badge-active {
   background-color: #2563eb;
   color: white;
@@ -486,17 +505,19 @@ body {
   align-items: flex-start;
 }
 
-.control-action-required {
+.control-action-required-compact {
   display: flex;
   align-items: center;
-  padding: 1rem;
+  /* padding: 0.2rem; */
   background-color: #fffbeb;
-  border: 1px solid #fed7aa;
+  /* border: 1px solid #fed7aa; */
   border-radius: 0.5rem;
   color: #92400e;
   font-size: 0.875rem;
-  margin-top: 0.5rem;
+  /* margin-top: 0.5rem; */
 }
+
+
 
 .control-list-actions {
   display: flex;
@@ -1577,6 +1598,212 @@ body {
     transform: rotate(360deg);
   }
 }
+
+/* Filtros de Normativas */
+.filters-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.filters-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.btn-clear-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.header-left {
+  flex: 1;
+  min-width: 250px;
+}
+
+.header-right {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+  min-width: 300px;
+}
+
+
+.btn-clear-filter:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.normativas-filter {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.normativa-tag {
+  padding: 0.5rem 1rem;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.normativa-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.normativa-tag.active {
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.normativa-tag.blue.active {
+  background: #2563eb;
+}
+
+.normativa-tag.green.active {
+  background: #10b981;
+}
+
+.normativa-tag.purple.active {
+  background: #8b5cf6;
+}
+
+.normativa-tag.orange.active {
+  background: #f59e0b;
+}
+
+.filter-info {
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+.process-normativas {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.normativa-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+}
+
+.normativa-badge.blue {
+  background: #2563eb;
+}
+
+.normativa-badge.green {
+  background: #10b981;
+}
+
+.normativa-badge.purple {
+  background: #8b5cf6;
+}
+
+.normativa-badge.orange {
+  background: #f59e0b;
+}
+
+
+.view-toggle {
+  display: flex;
+  gap: 8px;
+
+}
+
+.toggle-button {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.toggle-button:hover {
+  background-color: #e5e7eb;
+}
+
+.toggle-button.active {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.compact-control-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.compact-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* o el espacio que quieras entre el título e ID */
+}
+
+.compact-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.compact-id {
+  font-size: 0.85rem;
+  font-weight: 450;
+  color: #666;
+  margin: 0;
+}
+
+.compact-badges {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.btn-outline.small {
+  padding: 4px 8px;
+  font-size: 0.875rem;
+}
+
 
 /* Export Tables Styles */
 .export-tables-grid {
