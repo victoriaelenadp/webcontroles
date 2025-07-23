@@ -1,6 +1,50 @@
 
 import { ShoppingCart, Settings, BarChartIcon as ChartNoAxesCombined, ShieldAlert } from "lucide-react"
 
+
+const API_BASE_URL = "http://localhost:8000"
+
+
+export const obtenerNormativas = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/normativas`)
+    if (!res.ok) throw new Error("Error al obtener normativas")
+    return await res.json()
+  } catch (e) {
+    console.error("Error obteniendo normativas:", e)
+    return []
+  }
+}
+
+export const obtenerProcesos = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/procesos`)
+    if (!res.ok) throw new Error("Error al obtener procesos")
+    return await res.json()
+  } catch (e) {
+    console.error("Error obteniendo procesos:", e)
+    return []
+  }
+}
+
+export const obtenerProceso = async (id) => {
+  const procesos = await obtenerProcesos()
+  return procesos.find((p) => p.id === id)
+}
+
+export const obtenerNormativa = async (id) => {
+  const normativas = await obtenerNormativas()
+  return normativas.find((n) => n.id === id)
+}
+
+export const obtenerProcesosPorNormativa = async (normativaId) => {
+  const procesos = await obtenerProcesos()
+  return procesos.filter((p) => p.normativas.includes(normativaId))
+}
+
+/* ...
+
+
 // Normativas disponibles
 export const normativas = [
   {
@@ -82,8 +126,10 @@ export const obtenerProcesosPorNormativa = (normativaId) => {
   return procesos.filter((proceso) => proceso.normativas.includes(normativaId))
 }
 
+ */
+
 // Esta función hace el fetch desde el backend y estructura los controles como antes
-const API_BASE_URL = "http://localhost:8000" // Ajusta si usas otro puerto o dominio
+
 
 // Obtener todos los controles desde el backend
 export const obtenerTodosLosControles = async () => {

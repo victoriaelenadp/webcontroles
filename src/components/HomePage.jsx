@@ -2,13 +2,15 @@
 "use client"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { FileText, Settings, BookIcon as BookAlert, Loader2, Filter, X } from "lucide-react"
+import { FileText, Settings, BookIcon as BookAlert, Loader2, Filter, X, ShoppingCart, ShieldAlert, ChartBar } from "lucide-react"
 import Card from "./ui/Card"
 import Badge from "./ui/Badge"
 import { obtenerProcesosConEstadisticas, calcularEstadisticasGenerales } from "../utils/estadisticas"
-import { normativas, obtenerProcesosPorNormativa } from "../data/procesos"
+import { obtenerNormativas, obtenerProcesosPorNormativa } from "../data/procesos"
+
 
 const HomePage = () => {
+    const [normativas, setNormativas] = useState([])
     const [procesos, setProcesos] = useState([])
     const [procesosFiltrados, setProcesosFiltrados] = useState([])
     const [estadisticas, setEstadisticas] = useState({
@@ -20,28 +22,46 @@ const HomePage = () => {
     const [loading, setLoading] = useState(true)
     const [normativaSeleccionada, setNormativaSeleccionada] = useState("")
 
+    const iconosPorProceso = {
+        compra: ShoppingCart,
+        fraude: ShieldAlert,
+        estadosfinancieros: ChartBar,
+        accesos: Settings,
+    }
+
     useEffect(() => {
         const cargarDatos = async () => {
             setLoading(true)
             const procesosData = await obtenerProcesosConEstadisticas()
             const stats = await calcularEstadisticasGenerales()
+            const normativasData = await obtenerNormativas()
+
             setProcesos(procesosData)
             setProcesosFiltrados(procesosData)
             setEstadisticas(stats)
+            setNormativas(normativasData)
             setLoading(false)
         }
         cargarDatos()
     }, [])
 
+
     useEffect(() => {
-        if (normativaSeleccionada) {
-            const procesosFiltrados = obtenerProcesosPorNormativa(normativaSeleccionada)
-            const procesosConEstadisticas = procesos.filter((proceso) => procesosFiltrados.some((p) => p.id === proceso.id))
-            setProcesosFiltrados(procesosConEstadisticas)
-        } else {
-            setProcesosFiltrados(procesos)
+        const filtrarProcesos = () => {
+            if (normativaSeleccionada) {
+                const filtrados = procesos.filter((p) =>
+                    p.normativas && p.normativas.includes(normativaSeleccionada)
+                )
+                setProcesosFiltrados(filtrados)
+            } else {
+                setProcesosFiltrados(procesos)
+            }
         }
+
+        filtrarProcesos()
     }, [normativaSeleccionada, procesos])
+
+
 
     const limpiarFiltro = () => {
         setNormativaSeleccionada("")
@@ -69,7 +89,7 @@ const HomePage = () => {
                         <div className="header-left">
                             <div>
                                 <h1 className="main-title">Procesos</h1>
-                                <p className="subtitle">Sistema de Monitoreo Continuo</p>
+                                <p className="subtitle">Sistema de Monitoreo Contínuo</p>
                                 <div className="header-stats">
                                     <div className="header-stat">
                                         <FileText size={16} />
@@ -133,7 +153,7 @@ const HomePage = () => {
 
                 <div className="processes-grid">
                     {procesosFiltrados.map((proceso) => {
-                        const IconComponent = proceso.icono || FileText
+                        const IconComponent = iconosPorProceso[proceso.id] || FileText
                         const isActive = proceso.estado === "Activo"
                         return (
                             <Card key={proceso.id} className="process-card">

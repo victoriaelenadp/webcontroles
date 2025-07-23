@@ -1,13 +1,23 @@
 // src/utils/estadisticas.js
-import { obtenerTodosLosControles, obtenerControlesPorProceso } from "../data/procesos";
-import { procesos } from "../data/procesos"; // Esto sigue hardcodeado por ahora
+// src/utils/estadisticas.js
 
+import { 
+  obtenerTodosLosControles, 
+  obtenerControlesPorProceso, 
+  obtenerProcesos 
+} from "../data/procesos";
+
+// Calcular estadísticas generales del sistema
 export const calcularEstadisticasGenerales = async () => {
-  const todosLosControles = await obtenerTodosLosControles();
-  const procesosActivos = procesos.filter((proceso) => proceso.estado === "Activo");
+  const [todosLosControles, todosLosProcesos] = await Promise.all([
+    obtenerTodosLosControles(),
+    obtenerProcesos(),
+  ]);
+
+  const procesosActivos = todosLosProcesos.filter((proceso) => proceso.estado === "Activo");
 
   return {
-    totalProcesos: procesos.length,
+    totalProcesos: todosLosProcesos.length,
     procesosActivos: procesosActivos.length,
     totalControles: todosLosControles.length,
     controlesPorEstado: {
@@ -18,6 +28,7 @@ export const calcularEstadisticasGenerales = async () => {
   };
 };
 
+// Calcular estadísticas para un proceso específico
 export const calcularEstadisticasProceso = async (procesoId) => {
   const controles = await obtenerControlesPorProceso(procesoId);
 
@@ -35,7 +46,10 @@ export const calcularEstadisticasProceso = async (procesoId) => {
   return estadisticas;
 };
 
+// Obtener lista de procesos con cantidad de controles asociados
 export const obtenerProcesosConEstadisticas = async () => {
+  const procesos = await obtenerProcesos();
+
   const result = await Promise.all(
     procesos.map(async (proceso) => {
       const controles = await obtenerControlesPorProceso(proceso.id);
@@ -45,5 +59,6 @@ export const obtenerProcesosConEstadisticas = async () => {
       };
     })
   );
+
   return result;
 };

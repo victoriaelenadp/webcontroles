@@ -185,6 +185,21 @@ body {
 
 }
 
+.input-search {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  width: 200px;
+  font-size: 0.9rem;
+}
+
+.header-right-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
 .card-content {
   display: flex;
   flex-direction: column;
@@ -517,7 +532,17 @@ body {
   /* margin-top: 0.5rem; */
 }
 
-
+.control-action-required {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: #fffbeb;
+  border: 1px solid #fed7aa;
+  border-radius: 0.5rem;
+  color: #92400e;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
 
 .control-list-actions {
   display: flex;

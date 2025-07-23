@@ -73,12 +73,21 @@ const ProcesoPage = () => {
         return control ? control.nombre_control : `Control ${controlId}`
     }
 
+    const [busquedaId, setBusquedaId] = useState("")
+
+    const controlesFiltrados = busquedaId
+        ? controles.filter((control) =>
+            control.id.toString().includes(busquedaId.trim())
+        )
+        : controles
+
+
     const tablasDisponibles = tablasPorProceso[id] || []
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
-            const p = obtenerProceso(id) // síncrono
+            const p = await obtenerProceso(id)
             const c = await obtenerControlesPorProceso(id)
             const stats = await calcularEstadisticasProceso(id)
 
@@ -242,26 +251,39 @@ const ProcesoPage = () => {
                             <BarChart3 size={20} style={{ marginRight: "8px", color: "#2563eb" }} />
                             Controles ({estadisticas.totalControles})
                         </h3>
-                        <div className="view-toggle">
-                            <button
-                                className={`toggle-button ${!vistaCompacta ? "active" : ""}`}
-                                onClick={() => setVistaCompacta(false)}
-                                title="Vista detallada"
-                            >
-                                <Rows2 size={18} />
-                            </button>
-                            <button
-                                className={`toggle-button ${vistaCompacta ? "active" : ""}`}
-                                onClick={() => setVistaCompacta(true)}
-                                title="Vista compacta"
-                            >
-                                <Rows4 size={18} />
-                            </button>
+
+                        <div className="header-right-tools">
+                            <input
+                                type="text"
+                                placeholder="Buscar por ID"
+                                value={busquedaId}
+                                onChange={(e) => setBusquedaId(e.target.value)}
+                                className="input-search"
+                            />
+
+                            <div className="view-toggle">
+                                <button
+                                    className={`toggle-button ${!vistaCompacta ? "active" : ""}`}
+                                    onClick={() => setVistaCompacta(false)}
+                                    title="Vista detallada"
+                                >
+                                    <Rows2 size={18} />
+                                </button>
+                                <button
+                                    className={`toggle-button ${vistaCompacta ? "active" : ""}`}
+                                    onClick={() => setVistaCompacta(true)}
+                                    title="Vista compacta"
+                                >
+                                    <Rows4 size={18} />
+                                </button>
+                            </div>
                         </div>
                     </div>
+
                     <div className="card-content">
                         <div className="controls-list">
-                            {controles.map((control, index) => {
+                            {controlesFiltrados.map((control, index) => {
+
                                 if (!vistaCompacta) {
                                     // Vista detallada
                                     return (
