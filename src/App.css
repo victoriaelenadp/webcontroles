@@ -185,6 +185,21 @@ body {
 
 }
 
+.filters-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.input-select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  width: 200px;
+  font-size: 0.9rem;
+}
+
+
 .input-search {
   padding: 0.5rem;
   border: 1px solid #ccc;
@@ -192,6 +207,8 @@ body {
   width: 200px;
   font-size: 0.9rem;
 }
+
+
 
 .header-right-tools {
   display: flex;

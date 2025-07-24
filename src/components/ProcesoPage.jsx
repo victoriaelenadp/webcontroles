@@ -41,6 +41,10 @@ const ProcesoPage = () => {
     const [estadisticas, setEstadisticas] = useState(null)
     const [loading, setLoading] = useState(true)
     const [vistaCompacta, setVistaCompacta] = useState(false)
+    const [filtroCriticidad, setFiltroCriticidad] = useState("");
+    const [filtroEstado, setFiltroEstado] = useState("");
+
+
 
 
     const tablasPorProceso = {
@@ -74,12 +78,14 @@ const ProcesoPage = () => {
     }
 
     const [busquedaId, setBusquedaId] = useState("")
+    const controlesFiltrados = controles.filter((control) => {
+        const coincideBusqueda = busquedaId === "" || control.id.toString().includes(busquedaId.trim());
+        const coincideCriticidad = filtroCriticidad === "" || control.criticidad === filtroCriticidad;
+        const coincideEstado = filtroEstado === "" || control.estado === filtroEstado;
 
-    const controlesFiltrados = busquedaId
-        ? controles.filter((control) =>
-            control.id.toString().includes(busquedaId.trim())
-        )
-        : controles
+        return coincideBusqueda && coincideCriticidad && coincideEstado;
+    });
+
 
 
     const tablasDisponibles = tablasPorProceso[id] || []
@@ -261,6 +267,30 @@ const ProcesoPage = () => {
                                 className="input-search"
                             />
 
+                            {/* Filtro por Criticidad */}
+                            <select
+                                value={filtroCriticidad}
+                                onChange={(e) => setFiltroCriticidad(e.target.value)}
+                                className="input-select"
+                            >
+                                <option value="">Todas las criticidades</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Media">Media</option>
+                                <option value="Baja">Baja</option>
+                            </select>
+
+                            {/* Filtro por Estado */}
+                            <select
+                                value={filtroEstado}
+                                onChange={(e) => setFiltroEstado(e.target.value)}
+                                className="input-select"
+                            >
+                                <option value="">Todos los estados</option>
+                                <option value="Cumpliendo">Cumpliendo</option>
+                                <option value="Atención">Atención</option>
+                                <option value="Crítico">Crítico</option>
+                            </select>
+
                             <div className="view-toggle">
                                 <button
                                     className={`toggle-button ${!vistaCompacta ? "active" : ""}`}
@@ -278,6 +308,7 @@ const ProcesoPage = () => {
                                 </button>
                             </div>
                         </div>
+
                     </div>
 
                     <div className="card-content">

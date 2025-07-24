@@ -197,6 +197,11 @@ const ControlDetalle = () => {
                                 <div className="info-row">
                                     <span className="info-label">Criticidad:</span>
                                     {getCriticidadBadge(control.criticidad)}
+
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Casos detectados:</span>
+                                    <span>{control.cantidadAnomalias ?? 0}</span>
                                 </div>
 
                                 {control.accion_requerida && (
