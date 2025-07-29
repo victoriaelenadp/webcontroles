@@ -1781,6 +1781,48 @@ body {
   background: #f59e0b;
 }
 
+/* Reutilizamos estilos de process-normativas para control-list-normativas */
+.control-list-normativas {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+  /* pequeño ajuste para que quede debajo de la descripción */
+  margin-bottom: 0.5rem;
+}
+
+.control-list-normativas .normativa-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+}
+
+/* Colores heredados de process-normativas */
+.normativa-badge.blue {
+  background: #2563eb;
+}
+
+.normativa-badge.green {
+  background: #10b981;
+}
+
+.normativa-badge.purple {
+  background: #8b5cf6;
+}
+
+.normativa-badge.orange {
+  background: #f59e0b;
+}
+
+/* Badge especial cuando no hay normativas */
+.normativa-badge.empty {
+  background: #6b7280;
+  /* gris neutro */
+  color: white;
+}
+
 
 .view-toggle {
   display: flex;

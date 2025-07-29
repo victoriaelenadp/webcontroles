@@ -13,7 +13,9 @@ import {
     LayoutList,
     Rows4,
     Rows2,
-    Wrench
+    Wrench,
+    Filter,
+    X
 } from "lucide-react"
 
 import { useEffect, useState } from "react"
@@ -32,6 +34,9 @@ import Card from "./ui/Card"
 import Badge from "./ui/Badge"
 
 import { Loader2 } from "lucide-react"
+import { obtenerNormativasPorControl, obtenerNormativas } from "../data/procesos"
+
+
 
 const ProcesoPage = () => {
     const { id } = useParams()
@@ -41,8 +46,15 @@ const ProcesoPage = () => {
     const [estadisticas, setEstadisticas] = useState(null)
     const [loading, setLoading] = useState(true)
     const [vistaCompacta, setVistaCompacta] = useState(false)
+
     const [filtroCriticidad, setFiltroCriticidad] = useState("");
     const [filtroEstado, setFiltroEstado] = useState("");
+    const [busquedaId, setBusquedaId] = useState("")
+
+    const [normativas, setNormativas] = useState([])
+    const [normativaSeleccionada, setNormativaSeleccionada] = useState("")
+
+
 
 
 
@@ -69,26 +81,54 @@ const ProcesoPage = () => {
         ]
     }
 
-    const getNombreControl = (tableName) => {
-        const match = tableName.match(/resultados_control(\d+)/)
-        if (!match) return tableName
-        const controlId = parseInt(match[1])
-        const control = controles.find(c => c.id_control === controlId)
-        return control ? control.nombre_control : `Control ${controlId}`
+
+
+    const controlesFiltrados = controles.filter((control) => {
+        const coincideBusqueda = busquedaId === "" || control.id.toString().includes(busquedaId.trim())
+        const coincideCriticidad = filtroCriticidad === "" || control.criticidad === filtroCriticidad
+        const coincideEstado = filtroEstado === "" || control.estado === filtroEstado
+        const coincideNormativa = normativaSeleccionada === "" ||
+            (control.normativas && control.normativas.some(n => n.id === normativaSeleccionada))
+
+        return coincideBusqueda && coincideCriticidad && coincideEstado && coincideNormativa
+    })
+
+    const limpiarFiltroNormativa = () => {
+        setNormativaSeleccionada("")
     }
 
-    const [busquedaId, setBusquedaId] = useState("")
-    const controlesFiltrados = controles.filter((control) => {
-        const coincideBusqueda = busquedaId === "" || control.id.toString().includes(busquedaId.trim());
-        const coincideCriticidad = filtroCriticidad === "" || control.criticidad === filtroCriticidad;
-        const coincideEstado = filtroEstado === "" || control.estado === filtroEstado;
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true)
+            const p = await obtenerProceso(id)
+            const c = await obtenerControlesPorProceso(id)
+            const stats = await calcularEstadisticasProceso(id)
+            const normativasData = await obtenerNormativas()
 
-        return coincideBusqueda && coincideCriticidad && coincideEstado;
-    });
+            // Añadimos normativas a cada control
+            const controlesConNormativas = await Promise.all(
+                (c || []).map(async (control) => {
+                    const normativasControl = await obtenerNormativasPorControl(control.id)
+                    return { ...control, normativas: normativasControl }
+                })
+            )
 
+            setProceso(p)
+            setControles(controlesConNormativas)
+            setEstadisticas(stats)
+            setNormativas(normativasData)
+            setLoading(false)
+        }
+
+        fetchData()
+    }, [id])
 
 
     const tablasDisponibles = tablasPorProceso[id] || []
+
+
+
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -97,8 +137,15 @@ const ProcesoPage = () => {
             const c = await obtenerControlesPorProceso(id)
             const stats = await calcularEstadisticasProceso(id)
 
+            const controlesConNormativas = await Promise.all(
+                (c || []).map(async (control) => {
+                    const normativasControl = await obtenerNormativasPorControl(control.id)
+                    return { ...control, normativas: normativasControl }
+                })
+            )
+
             setProceso(p)
-            setControles(c || [])
+            setControles(controlesConNormativas)
             setEstadisticas(stats)
             setLoading(false)
         }
@@ -199,7 +246,45 @@ const ProcesoPage = () => {
                                 <p className="subtitle">{proceso.titulo}</p>
                             </div>
                         </div>
-                        <div className="last-update">{estadisticas.totalControles} controles</div>
+                        <div className="header-right">
+                            <div className="filters-section">
+                                <div className="filters-header">
+                                    <div className="filters-title">
+                                        <Filter size={20} />
+                                        <span>Filtrar por Normativa</span>
+                                    </div>
+                                    {normativaSeleccionada && (
+                                        <button onClick={limpiarFiltroNormativa} className="btn-clear-filter">
+                                            <X size={16} />
+                                            Limpiar filtro
+                                        </button>
+                                    )}
+                                </div>
+
+                                <div className="normativas-filter">
+                                    {normativas.map((normativa) => (
+                                        <button
+                                            key={normativa.id}
+                                            onClick={() => setNormativaSeleccionada(normativa.id)}
+                                            className={`normativa-tag ${normativaSeleccionada === normativa.id ? "active" : ""} ${normativa.color}`}
+                                        >
+                                            {normativa.nombre}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {normativaSeleccionada && (
+                                    <div className="filter-info">
+                                        <span>
+                                            Mostrando {controlesFiltrados.length} controles de{" "}
+                                            {normativas.find((n) => n.id === normativaSeleccionada)?.nombre}
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
             </header>
@@ -267,17 +352,7 @@ const ProcesoPage = () => {
                                 className="input-search"
                             />
 
-                            {/* Filtro por Criticidad */}
-                            <select
-                                value={filtroCriticidad}
-                                onChange={(e) => setFiltroCriticidad(e.target.value)}
-                                className="input-select"
-                            >
-                                <option value="">Todas las criticidades</option>
-                                <option value="Alta">Alta</option>
-                                <option value="Media">Media</option>
-                                <option value="Baja">Baja</option>
-                            </select>
+
 
                             {/* Filtro por Estado */}
                             <select
@@ -289,6 +364,18 @@ const ProcesoPage = () => {
                                 <option value="Cumpliendo">Cumpliendo</option>
                                 <option value="Atención">Atención</option>
                                 <option value="Crítico">Crítico</option>
+                            </select>
+
+                            {/* Filtro por Criticidad */}
+                            <select
+                                value={filtroCriticidad}
+                                onChange={(e) => setFiltroCriticidad(e.target.value)}
+                                className="input-select"
+                            >
+                                <option value="">Todas las criticidades</option>
+                                <option value="Alta">Alta</option>
+                                <option value="Media">Media</option>
+                                <option value="Baja">Baja</option>
                             </select>
 
                             <div className="view-toggle">
@@ -327,6 +414,27 @@ const ProcesoPage = () => {
                                                     <h4 className="control-list-title">{control.nombre_control}</h4>
                                                     <h2 className="control-list-description">ID: {control.id}</h2>
                                                     <p className="control-list-description">{control.descripcion}</p>
+
+                                                    {/* Normativas asociadas */}
+                                                    <div className="control-list-normativas">
+                                                        {control.normativas?.length > 0 ? (
+                                                            control.normativas.map((n) => {
+                                                                const normativa = normativas.find((norm) => norm.id === n.id) // buscar color
+                                                                return normativa ? (
+                                                                    <span key={n.id} className={`normativa-badge ${normativa.color}`}>
+                                                                        {normativa.nombre}
+                                                                    </span>
+                                                                ) : (
+                                                                    <span key={n.id} className="normativa-badge blue">
+                                                                        {n.nombre}
+                                                                    </span>
+                                                                )
+                                                            })
+                                                        ) : (
+                                                            <span className="normativa-badge empty">Sin normativas</span>
+                                                        )}
+                                                    </div>
+
                                                 </div>
                                                 <div className="control-list-badges">
                                                     {getEstadoBadge(control.estado)}

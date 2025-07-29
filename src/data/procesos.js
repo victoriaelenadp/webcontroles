@@ -42,6 +42,18 @@ export const obtenerProcesosPorNormativa = async (normativaId) => {
   return procesos.filter((p) => p.normativas.includes(normativaId))
 }
 
+export const obtenerNormativasPorControl = async (controlId) => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/controles/${controlId}/normativas`)
+    if (!res.ok) throw new Error("Error al obtener normativas del control")
+    return await res.json()
+  } catch (e) {
+    console.error("Error obteniendo normativas del control:", e)
+    return []
+  }
+}
+
+
 /* ...
 
 
