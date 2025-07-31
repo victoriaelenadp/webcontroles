@@ -71,13 +71,28 @@ const ProcesoPage = () => {
             "resultados_control9",
         ],
         "fraude": [
-            "resultados_control10"
+            "resultados_control10",
+            "resultados_control16",
+            "resultados_control11",
+            "resultados_control12"
+
         ],
         "estadosfinancieros": [
+            "resultados_control20",
+            "resultados_control23",
+            "resultados_control21",
+            "resultados_control24",
+            "resultados_control25",
+            "resultados_control26",
+            "resultados_control28",
+            "resultados_control29"
 
         ],
         "accesos": [
-            "resultados_control14"
+            "resultados_control14",
+            "resultados_control30",
+            "resultados_control31",
+            "resultados_control32"
         ]
     }
 
