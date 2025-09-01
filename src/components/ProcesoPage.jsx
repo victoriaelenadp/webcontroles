@@ -475,7 +475,7 @@ const ProcesoPage = () => {
                                         <div key={control.id} className="compact-control-item">
                                             <div>
                                                 <h4 className="compact-title">{control.nombre_control}</h4>
-                                                {/*   <h2 className="control-list-description">ID: {control.id}</h2> */}
+                                                <h2 className="control-list-description">ID: {control.id}</h2>
                                                 <div className="compact-badges">
                                                     {getEstadoBadge(control.estado)}
                                                     {/*  
@@ -505,9 +505,10 @@ const ProcesoPage = () => {
 
                     </div>
                 </Card>
+                {/* 
                 <Card className="controls-list-card">
 
-                    {/* Export Section */}
+                   
                     <Card className="control-card" style={{ marginTop: "2rem" }}>
                         <div className="card-header">
                             <div className="control-info">
@@ -574,8 +575,8 @@ const ProcesoPage = () => {
                             )}
                         </div>
                     </Card>
-                </Card>
-
+                </Card> 
+*/}
             </main>
         </div>
     )

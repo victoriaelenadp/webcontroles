@@ -95,10 +95,10 @@ const HomePage = () => {
                                         <FileText size={16} />
                                         <span>{estadisticas.totalProcesos} Procesos</span>
                                     </div>
-                                    <div className="header-stat">
-                                        <Settings size={16} />
-                                        <span>{estadisticas.procesosActivos} Activos</span>
-                                    </div>
+                                    {/* < <div className="header-stat">
+                                        {/* <Settings size={16} />
+                                        <span>{estadisticas.procesosActivos} Activos</span> 
+                                    </div> */}
                                     <div className="header-stat">
                                         <BookAlert size={16} />
                                         <span>{estadisticas.totalControles} Controles</span>
@@ -165,7 +165,7 @@ const HomePage = () => {
                                         <div>
                                             <h3 className="process-title">{proceso.titulo}</h3>
                                             <div className="badges">
-                                                <Badge variant={isActive ? "active" : "inactive"}>{proceso.estado}</Badge>
+                                                {/* <Badge variant={isActive ? "active" : "inactive"}>{proceso.estado}</Badge>  */}
                                                 {isActive && <Badge variant="outline">{proceso.controles} controles</Badge>}
                                             </div>
                                         </div>
