@@ -1992,13 +1992,15 @@ body {
   margin-top: 1rem;
 }
 
+
+
 .powerbi-detail-image {
   width: 100%;
   height: auto;
-  min-height: 400px;
-  max-height: 600px;
-  object-fit: cover;
-  border-radius: 0.5rem;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
 }
 
 .control-info-panel {

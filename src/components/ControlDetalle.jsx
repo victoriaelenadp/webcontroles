@@ -175,10 +175,15 @@ const ControlDetalle = () => {
                         <div className="card-content">
                             <div className="powerbi-detail-container">
                                 <img
-                                    src={control.powerBiUrl || "/placeholder.svg"}
+                                    src={
+                                        control.id === 1
+                                            ? "https://backendwebcontroles.onrender.com/static/images/1.png"
+                                            : "/placeholder.svg"
+                                    }
                                     alt={`Dashboard de ${control.nombre_control}`}
                                     className="powerbi-detail-image"
                                 />
+
                             </div>
                         </div>
                     </Card>
